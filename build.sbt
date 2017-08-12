@@ -1,9 +1,9 @@
 
-name := "pepoffsets"
+name := "datadog-reporter"
 
 version := "1.0"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.11.11"
 
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
@@ -13,6 +13,9 @@ libraryDependencies ++= Seq(
   .map(_.exclude("ch.qos.logback","logback-classic"))
   .map(_.exclude("ch.qos.logback","logback-classic"))
 
+libraryDependencies += "com.quantifind" % "KafkaOffsetMonitor" % "0.4.1-SNAPSHOT" % "provided" from "https://github.com/Morningstar/kafka-offset-monitor/releases/download/0.4.1/KafkaOffsetMonitor-assembly-0.4.1-SNAPSHOT.jar"
+
+
 val meta = """META.INF(.)*""".r
 
 assemblyMergeStrategy in assembly := {
@@ -20,16 +23,3 @@ assemblyMergeStrategy in assembly := {
   case meta(_) => MergeStrategy.discard // invalid signature file digest for manifest main attributes from spark.sql
   case _ => MergeStrategy.first
 }
-
-assemblyExcludedJars in assembly := {
-  val cp = (fullClasspath in assembly).value
-  cp filter {_.data.getName == "koma-0.3.0.jar"}
-}
-
-parallelExecution in Test := false
-
-updateOptions := updateOptions.value.withCachedResolution(true)
-
-
-
-    
